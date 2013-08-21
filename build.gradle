@@ -1,8 +1,9 @@
 apply plugin: 'idea'
 apply plugin: 'groovy'
+apply plugin: 'maven-publish'
 
 group = "groovyx.ast.bytecode"
-version = "0.2.0-SNAPSHOT"
+version = "0.2.0-separate-asm"
 
 description = "Provides an AST Transformation which allows to write the body of a method as bytecode"
 
@@ -40,9 +41,10 @@ ext.srcCopy="${srcOriginal}-copy"
 
 // external dependencies
 dependencies {
-    groovy group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.1.0'
+    compile group: 'org.codehaus.groovy', name: 'groovy', version: '2.1.4'
+    compile group: 'org.ow2.asm', name: 'asm-all', version: '4.0'
     testCompile "org.spockframework:spock-core:0.7-groovy-2.0"
-    testRuntime 'net.sourceforge.cobertura:cobertura:1.9.3'
+    testRuntime 'net.sourceforge.cobertura:cobertura:2.0.3'
     testCompile "junit:junit:4.8.1"
 }
 
@@ -59,11 +61,11 @@ test.doFirst  {
             fileset(dir: srcOriginal)
         }
         // instrument the relevant classes in-place
-        'cobertura-instrument'(datafile:cobSerFile) {
-            fileset(dir: srcOriginal,
-                   includes:"groovyx/ast/bytecode/**/*.class",
-                   excludes:"**/*Test.class")
-        }
+        // 'cobertura-instrument'(datafile:cobSerFile) {
+        //     fileset(dir: srcOriginal,
+        //            includes:"groovyx/ast/bytecode/**/*.class",
+        //            excludes:"**/*Test.class")
+        // }
     }
 }
 
@@ -80,7 +82,21 @@ test.doLast {
                      tofile: srcOriginal)
         }
         // create cobertura reports
-        ant.'cobertura-report'(destdir:"${project.buildDir}/test-results",
-             format:'html', srcdir:"src/main/groovy", datafile:cobSerFile)
+//        ant.'cobertura-report'(destdir:"${project.buildDir}/test-results",
+//             format:'html', srcdir:"src/main/groovy", datafile:cobSerFile)
+    }
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://$buildDir/repo" // change to point to your repo, e.g. http://my.org/repo
+        }
     }
 }

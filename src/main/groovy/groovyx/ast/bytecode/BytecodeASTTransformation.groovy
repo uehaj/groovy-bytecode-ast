@@ -20,11 +20,11 @@
 
 package groovyx.ast.bytecode
 
-import groovyjarjarasm.asm.Handle
-import groovyjarjarasm.asm.Type
-import groovyjarjarasm.asm.Label
-import groovyjarjarasm.asm.MethodVisitor
-import groovyjarjarasm.asm.Opcodes
+import org.objectweb.asm.Handle
+import org.objectweb.asm.Type
+import org.objectweb.asm.Label
+import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
 import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
